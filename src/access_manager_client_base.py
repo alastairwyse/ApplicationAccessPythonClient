@@ -2,19 +2,32 @@ from typing import TypeVar, Generic, Dict, Callable
 from abc import ABC
 import json
 from http import HTTPStatus
+import requests
 from requests import Request
 
 from exceptions.deserialization_error import DeserializationError
 from exceptions.not_found_error import NotFoundError
 from exceptions.element_not_found_error import ElementNotFoundError
-from models.http_error_response import HttpErrorResponse
 from http_method import HTTPMethod
 from http_error_response_json_serializer import HttpErrorResponseJsonSerializer
+from models.http_error_response import HttpErrorResponse
+from string_unique_stringifier import StringUniqueStringifier
+from unique_stringifier_base import UniqueStringifierBase
 
 TUser = TypeVar("TUser")
 TGroup = TypeVar("TGroup")
 TComponent = TypeVar("TComponent")
 TAccess = TypeVar("TAccess")
+
+# TODO:
+#   Add constructor params from requests.request, e.g...
+#     headers
+#     cookies?
+#     auth (what is this)
+#     timeout
+#     proxies
+#     verify
+#     cert
 
 class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
     """Base for client classes which interface to AccessManager instances hosted as REST web APIs.
@@ -31,12 +44,43 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
     
     """
 
-    def __init__(self) -> None:
-        """Initialises a new instance of the AccessManagerClientBase class."""
+    def __init__(
+            self,
+            base_url: str, 
+            user_stringifier: UniqueStringifierBase=StringUniqueStringifier, 
+            group_stringifier: UniqueStringifierBase=StringUniqueStringifier, 
+            application_component_stringifier: UniqueStringifierBase=StringUniqueStringifier, 
+            access_level_stringifier: UniqueStringifierBase=StringUniqueStringifier, 
+        ) -> None:
+        """Initialises a new instance of the AccessManagerClientBase class.
+        
+        Args:
+            base_url:
+                The base URL for the hosted Web API (must include a trailing forward slash).
+            user_stringifier:
+                A string converter for users.  Used to convert strings sent to and received from the web API from/to TUser instances.
+            group_stringifier:
+                A string converter for groups.  Used to convert strings sent to and received from the web API from/to TGroup instances.
+            application_component_stringifier:
+                A string converter for application components.  Used to convert strings sent to and received from the web API from/to TComponent instances.
+            access_level_stringifier:
+                A string converter for access levels.  Used to convert strings sent to and received from the web API from/to TAccess instances.
+        """
+        if (base_url[len(base_url) - 1] != "/"):
+            raise ValueError("Parameter 'base_url' with value '{0}' must have a trailing forward slash character.".format(base_url))
+
         self._error_response_deserializer = HttpErrorResponseJsonSerializer()
+        self._initialize_base_url(base_url)
+        self._user_stringifier = user_stringifier
+        self._group_stringifier = group_stringifier
+        self._application_component_stringifier = application_component_stringifier
+        self._access_level_stringifier = access_level_stringifier
+        self._request_accept_header: Dict[str, str] = { "Accept": "application/json" }
 
 
     #region Private/Protected Methods
+
+    # TODO: SendGetRequest()... need to setup generic method.
 
     def _initialize_base_url(self, base_url: str) -> None:
         """Adds an appropriate path suffix to the specified 'base_url' constructor parameter.
@@ -46,20 +90,6 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
                 The base URL to initialize.
         """
         self._base_url: str = base_url + "api/v1/"
-
-
-    def _set_request_accept_header(self, request: Request) -> None:
-        """Sets appropriate 'Accept' headers on the specified Request.
-
-        Args:
-            request:
-                The Request to set the header(s) on.
-        """
-        accept_header_name: str = "Accept"
-        accept_header_value: str = "application/json"
-        if (accept_header_name in request.headers):
-            request.headers.pop(accept_header_name)
-        request.headers[accept_header_name] = accept_header_value
 
 
     def _initialize_status_code_to_exception_throwing_action_map(self) -> None:
@@ -84,8 +114,28 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
             response_body:
                 The received response body.
         """
+        base_exception_message: str = "Failed to call URL '{0}' with '{1}' method.  Received non-succces HTTP response status '{2}'".format(
+            request_url, 
+            http_method, 
+            response_status
+        )
 
-        pass
+        # Attempt to deserialize a HttpErrorResponse from the body
+        http_error_response: HttpErrorResponse = self._deserialize_response_body_to_http_error_response(response_body)
+        if (http_error_response is not None):
+            if (response_status in self._status_code_to_exception_throwing_action_map):
+                self._status_code_to_exception_throwing_action_map[response_status](http_error_response)
+            else:
+                exception_message_postfix: str = ", error code '{0}', and error message '{1}'.".format(
+                    http_error_response.code, 
+                    http_error_response.message
+                )
+                raise RuntimeError(base_exception_message + exception_message_postfix)
+        else:
+            if (response_body.isspace() == False):
+                raise RuntimeError(base_exception_message + " and response body '{0}'.".format(response_body))
+            else:
+                raise RuntimeError(base_exception_message + ".")
 
 
     def _deserialize_response_body_to_http_error_response(self, response_body: str) -> HttpErrorResponse:

@@ -4,5 +4,5 @@ class HTTPMethod(Enum):
     """Represents an HTTP method.
     """
     get = "GET", 
-    put = "PUT", 
+    post = "POST", 
     delete = "DELETE"
