@@ -4,8 +4,8 @@ from unique_stringifier_base import UniqueStringifierBase
 T1 = TypeVar("T1")
 T2 = TypeVar("T2")
 
-class JsonDictToContainerConverter():
-    """Converts a Dict containing JSON (e.g. created by json.loads()) to Python 'container' datatype or Iterable.
+class JsonDictToIterableConverter():
+    """Converts a Dict containing JSON (e.g. created by json.loads()) to Iterable instances.
     """
 
     def convert_to_iterable_of_tuples(
@@ -70,49 +70,6 @@ class JsonDictToContainerConverter():
             converted_value: T1 = stringifier.from_string(current_element)
 
             yield converted_value
-
-
-    def convert_to_set_of_tuples(
-        self, 
-        input_dicts: List[Dict[str, str]], 
-        key_1: str, 
-        key_2: str, 
-        stringifier_1: UniqueStringifierBase[T1], 
-        stringifier_2: UniqueStringifierBase[T2], 
-    ) -> Set[Tuple[T1, T2]]:
-        """Converts a Dict containing JSON (e.g. created by json.loads()) to a set of tuples of 2 values.
-
-        Args:
-            input_dicts:
-                List representing an array of JSON objects (represented as Dicts) to convert.
-            key_1:
-                The name of the first JSON property (of each array element) to convert.
-            key_2:
-                The name of the second JSON property (of each array element) to convert.
-            stringifier_1:
-                UniqueStringifierBase instance to use to convert the first JSON property (of each array element) value to type T1.
-            stringifier_2:
-                UniqueStringifierBase instance to use to convert the second JSON property (of each array element) value to type T2.
-
-        Returns:
-            A set of tuples of 2 values of types T1 and T2 respectively.
-        """
-        return set(self.convert_to_iterable_of_tuples(input_dicts, key_1, key_2, stringifier_1, stringifier_2))
-
-
-    def convert_to_set(self, input_list: List[str], stringifier: UniqueStringifierBase[T1]) -> Set[T1]:
-        """Converts a List containing JSON (e.g. created by json.loads()) to a set of single values.
-
-        Args:
-            input_list:
-                List representing an array of JSON values to convert.
-            stringifier:
-                UniqueStringifierBase instance to use to convert each element of the array to type T1.
-
-        Returns:
-            A set of single values of type T1.
-        """
-        return set(self.convert_to_iterable(input_list, stringifier))
 
 
     #region Private/Protected Methods

@@ -28,6 +28,7 @@ TAccess = TypeVar("TAccess")
 #     proxies
 #     verify
 #     cert
+#     proxy
 
 class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
     """Base for client classes which interface to AccessManager instances hosted as REST web APIs.
