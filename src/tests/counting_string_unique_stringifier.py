@@ -4,12 +4,12 @@ class CountingStringUniqueStringifier(StringUniqueStringifier):
     """Subclass of StringUniqueStringifier used for testing which counts the number of calls to the to_string() and from_string() methods."""
 
     @property
-    def to_string_count(self) -> str:
+    def to_string_count(self) -> int:
         """The number of times the to_string() method has been called."""
         return self._to_string_count
 
     @property
-    def from_string_count(self) -> str:
+    def from_string_count(self) -> int:
         """The number of times the from_string() method has been called."""
         return self._from_string_count
 

@@ -1,4 +1,4 @@
-from typing import List, Dict, TypeVar, Set, Tuple, Iterable
+from typing import List, Dict, TypeVar, Set, Tuple, Iterable, Any
 from unique_stringifier_base import UniqueStringifierBase
 
 T1 = TypeVar("T1")
@@ -74,12 +74,12 @@ class JsonDictToIterableConverter():
 
     #region Private/Protected Methods
 
-    def _raise_error_if_key_not_in_dict(self, input_dict: Dict[str, object], key: str, parameter_name: str) -> None:
+    def _raise_error_if_key_not_in_dict(self, input_dict: Dict[str, Any], key: str, parameter_name: str) -> None:
         if (key not in input_dict):
             raise ValueError("Element of dict parameter '{0}' does not contain key '{1}'.".format(parameter_name, key))
         
     
-    def _raise_error_if_dict_value_not_of_type(self, input_dict: Dict[str, object], key: str, expected_type: TypeVar, parameter_name: str) -> None:
+    def _raise_error_if_dict_value_not_of_type(self, input_dict: Dict[str, Any], key: str, expected_type: type, parameter_name: str) -> None:
         if (isinstance(input_dict[key], expected_type) == False):
             raise ValueError("Value of key '{0}' of element of dict parameter '{1}' was expected to be of type '{2}' but was '{3}'.".format(
                 key, 

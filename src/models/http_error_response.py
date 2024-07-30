@@ -1,4 +1,4 @@
-from typing import Iterable, Tuple
+from typing import Iterable, Tuple, Union
 
 class HttpErrorResponse:
     """Container class holding the data returned from a REST API when an error occurs.
@@ -27,7 +27,7 @@ class HttpErrorResponse:
         return self._message
 
     @property
-    def target(self) -> str:
+    def target(self) -> Union[str, None]:
         """The target of the error."""
         return self._target
 
@@ -37,7 +37,7 @@ class HttpErrorResponse:
         return self._attributes
 
     @property
-    def inner_error(self) -> "HttpErrorResponse":
+    def inner_error(self) -> Union["HttpErrorResponse", None]:
         """The error which caused this error."""
         return self._inner_error
 
@@ -45,9 +45,9 @@ class HttpErrorResponse:
             self, 
             code: str, 
             message: str, 
-            target: str=None, 
+            target: Union[str, None]=None, 
             attributes: Iterable[Tuple[str, str]]=[], 
-            inner_error:"HttpErrorResponse"=None
+            inner_error: Union["HttpErrorResponse", None]=None
             ) -> None:
         """Initialises a new instance of the HttpErrorResponse class.
 
@@ -69,9 +69,9 @@ class HttpErrorResponse:
         
         self._code: str = code
         self._message: str = message
-        self._target: str = target
+        self._target: Union[str, None] = target
         self._attributes: Iterable[Tuple[str, str]] = attributes
-        self._inner_error: "HttpErrorResponse" = inner_error
+        self._inner_error: Union["HttpErrorResponse", None] = inner_error
 
 
 

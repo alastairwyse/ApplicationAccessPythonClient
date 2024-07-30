@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Dict, Callable
+from typing import TypeVar, Generic, Dict, Callable, Union
 from abc import ABC
 import json
 from http import HTTPStatus
@@ -48,10 +48,10 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
     def __init__(
             self,
             base_url: str, 
-            user_stringifier: UniqueStringifierBase=StringUniqueStringifier, 
-            group_stringifier: UniqueStringifierBase=StringUniqueStringifier, 
-            application_component_stringifier: UniqueStringifierBase=StringUniqueStringifier, 
-            access_level_stringifier: UniqueStringifierBase=StringUniqueStringifier, 
+            user_stringifier: UniqueStringifierBase[TUser], 
+            group_stringifier: UniqueStringifierBase[TGroup], 
+            application_component_stringifier: UniqueStringifierBase[TComponent], 
+            access_level_stringifier: UniqueStringifierBase[TAccess], 
         ) -> None:
         """Initialises a new instance of the AccessManagerClientBase class.
         
@@ -122,7 +122,7 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
         )
 
         # Attempt to deserialize a HttpErrorResponse from the body
-        http_error_response: HttpErrorResponse = self._deserialize_response_body_to_http_error_response(response_body)
+        http_error_response: Union[HttpErrorResponse, None] = self._deserialize_response_body_to_http_error_response(response_body)
         if (http_error_response is not None):
             if (response_status in self._status_code_to_exception_throwing_action_map):
                 self._status_code_to_exception_throwing_action_map[response_status](http_error_response)
@@ -139,7 +139,7 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
                 raise RuntimeError(base_exception_message + ".")
 
 
-    def _deserialize_response_body_to_http_error_response(self, response_body: str) -> HttpErrorResponse:
+    def _deserialize_response_body_to_http_error_response(self, response_body: str) -> Union[HttpErrorResponse, None]:
         """Attempts to deserialize the body of a HTTP response received as a string to an HttpErrorResponse instance.
 
         Args:

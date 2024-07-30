@@ -1,10 +1,12 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Iterable, TypeVar, Any
 import json
 import unittest
 
 from models.http_error_response import HttpErrorResponse
 from exceptions.deserialization_error import DeserializationError
 from http_error_response_json_serializer import HttpErrorResponseJsonSerializer
+
+T = TypeVar("T")
 
 class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
     """Unit tests for the HttpErrorResponseJsonSerializer class."""
@@ -215,8 +217,9 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         self.assertEqual(test_code, result.code)
         self.assertEqual(test_message, result.message)
         self.assertEqual(test_target, result.target)
-        self.assertEqual(test_attributes[0], result.attributes[0])
-        self.assertEqual(test_attributes[1], result.attributes[1])
+        result_attributes_list: List[Tuple[str, str]] = list(result.attributes)
+        self.assertEqual(test_attributes[0], result_attributes_list[0])
+        self.assertEqual(test_attributes[1], result_attributes_list[1])
         self.assertIsNone(result.inner_error)
 
 
@@ -228,7 +231,8 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         self.assertEqual(test_code, result.code)
         self.assertEqual(test_message, result.message)
         self.assertEqual(test_target, result.target)
-        self.assertEqual(0, len(result.attributes))
+        result_attributes_list: List[Tuple[str, str]] = list(result.attributes)
+        self.assertEqual(0, len(result_attributes_list))
         self.assertIsNone(result.inner_error)
 
 
@@ -240,8 +244,9 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         self.assertEqual(test_code, result.code)
         self.assertEqual(test_message, result.message)
         self.assertIsNone(result.target)
-        self.assertEqual(test_attributes[0], result.attributes[0])
-        self.assertEqual(test_attributes[1], result.attributes[1])
+        result_attributes_list: List[Tuple[str, str]] = list(result.attributes)
+        self.assertEqual(test_attributes[0], result_attributes_list[0])
+        self.assertEqual(test_attributes[1], result_attributes_list[1])
         self.assertIsNone(result.inner_error)
 
 
@@ -253,7 +258,8 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         self.assertEqual(test_code, result.code)
         self.assertEqual(test_message, result.message)
         self.assertIsNone(result.target)
-        self.assertEqual(0, len(result.attributes))
+        result_attributes_list: List[Tuple[str, str]] = list(result.attributes)
+        self.assertEqual(0, len(result_attributes_list))
         self.assertIsNone(result.inner_error)
         
 
@@ -276,9 +282,11 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         self.assertEqual(test_code, result.code)
         self.assertEqual(test_message, result.message)
         self.assertEqual(test_target, result.target)
-        self.assertEqual(test_attributes[0], result.attributes[0])
-        self.assertEqual(test_attributes[1], result.attributes[1])
+        result_attributes_list: List[Tuple[str, str]] = list(result.attributes)
+        self.assertEqual(test_attributes[0], result_attributes_list[0])
+        self.assertEqual(test_attributes[1], result_attributes_list[1])
         self.assertIsNotNone(result.inner_error)
+        assert result.inner_error is not None
         self.assertEqual(test_inner_error_code, result.inner_error.code)
         self.assertEqual(test_inner_error_message, result.inner_error.message)
 
@@ -291,8 +299,10 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         self.assertEqual(test_code, result.code)
         self.assertEqual(test_message, result.message)
         self.assertEqual(test_target, result.target)
-        self.assertEqual(0, len(result.attributes))
+        result_attributes_list: List[Tuple[str, str]] = list(result.attributes)
+        self.assertEqual(0, len(result_attributes_list))
         self.assertIsNotNone(result.inner_error)
+        assert result.inner_error is not None
         self.assertEqual(test_inner_error_code, result.inner_error.code)
         self.assertEqual(test_inner_error_message, result.inner_error.message)
 
@@ -305,9 +315,11 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         self.assertEqual(test_code, result.code)
         self.assertEqual(test_message, result.message)
         self.assertIsNone(result.target)
-        self.assertEqual(test_attributes[0], result.attributes[0])
-        self.assertEqual(test_attributes[1], result.attributes[1])
+        result_attributes_list: List[Tuple[str, str]] = list(result.attributes)
+        self.assertEqual(test_attributes[0], result_attributes_list[0])
+        self.assertEqual(test_attributes[1], result_attributes_list[1])
         self.assertIsNotNone(result.inner_error)
+        assert result.inner_error is not None
         self.assertEqual(test_inner_error_code, result.inner_error.code)
         self.assertEqual(test_inner_error_message, result.inner_error.message)
 
@@ -320,8 +332,10 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         self.assertEqual(test_code, result.code)
         self.assertEqual(test_message, result.message)
         self.assertIsNone(result.target)
-        self.assertEqual(0, len(result.attributes))
+        result_attributes_list: List[Tuple[str, str]] = list(result.attributes)
+        self.assertEqual(0, len(result_attributes_list))
         self.assertIsNotNone(result.inner_error)
+        assert result.inner_error is not None
         self.assertEqual(test_inner_error_code, result.inner_error.code)
         self.assertEqual(test_inner_error_message, result.inner_error.message)
 
@@ -352,9 +366,11 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         self.assertEqual("BufferFlushingException", result.code)
         self.assertEqual("Exception occurred on buffer flushing worker thread at 2023-01-29 12:29:12.075 +09:00.", result.message)
         self.assertEqual("Throw", result.target)
+        assert result.inner_error is not None
         self.assertEqual("Exception", result.inner_error.code)
         self.assertEqual("Failed to process buffers and persist flushed events.", result.inner_error.message)
         self.assertEqual("Flush", result.inner_error.target)
+        assert result.inner_error.inner_error is not None
         self.assertEqual("Exception", result.inner_error.inner_error.code)
         self.assertEqual("Failed to execute stored procedure 'ProcessEvents' in SQL Server.", result.inner_error.inner_error.message)
         self.assertEqual("ExecuteStoredProcedure", result.inner_error.inner_error.target)

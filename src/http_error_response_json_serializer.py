@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Any, Union
 
 from models.http_error_response import HttpErrorResponse
 from exceptions.deserialization_error import DeserializationError
@@ -31,7 +31,7 @@ class HttpErrorResponseJsonSerializer:
         return return_json_dict
 
 
-    def deserialize(self, json_object: Dict[str, object]) -> HttpErrorResponse:
+    def deserialize(self, json_object: Dict[str, Any]) -> HttpErrorResponse:
         """Deserializes the specified JSON object to a HttpErrorResponse object.
         
         Args:
@@ -81,7 +81,7 @@ class HttpErrorResponseJsonSerializer:
         return return_json_dict
 
 
-    def deserialize_error(self, json_object: Dict[str, object]) -> HttpErrorResponse:
+    def deserialize_error(self, json_object: Dict[str, Any]) -> HttpErrorResponse:
         """Deserializes the 'error' and 'inner_error' properties of a JSON document containing a serialized HttpErrorResponse.
         
         Args:
@@ -101,16 +101,16 @@ class HttpErrorResponseJsonSerializer:
         
         code: str = json_object[self._CODE_PROPERTY_NAME]
         message: str = json_object[self._MESSAGE_PROPERTY_NAME]
-        target: str = None
+        target: Union[str, None] = None
         attributes: List[Tuple[str, str]] = list()
-        inner_error: HttpErrorResponse = None
+        inner_error: Union[HttpErrorResponse, None] = None
 
         # Deserialize optional properties
         if (self._TARGET_PROPERTY_NAME in json_object):
             target = json_object[self._TARGET_PROPERTY_NAME]
             
         if (self._ATTRIBUTES_PROPERTY_NAME in json_object and isinstance(json_object[self._ATTRIBUTES_PROPERTY_NAME], list) == True):
-            attributes_json: List[Dict[str, object]] = json_object[self._ATTRIBUTES_PROPERTY_NAME]
+            attributes_json: List[Dict[str, Any]] = json_object[self._ATTRIBUTES_PROPERTY_NAME]
             for current_attribute_json in attributes_json:
                 if (self._NAME_PROPERTY_NAME in current_attribute_json and self._VALUE_PROPERTY_NAME in current_attribute_json):
                     attributes.append(( current_attribute_json[self._NAME_PROPERTY_NAME], current_attribute_json[self._VALUE_PROPERTY_NAME] ))

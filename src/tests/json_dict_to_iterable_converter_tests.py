@@ -14,14 +14,14 @@ class JsonDictToIterableConverterTests(unittest.TestCase):
 
     def test_convert_to_iterable_input_list_parameter_not_List(self):
         with self.assertRaises(ValueError) as result:
-            list(self._test_json_dict_to_iterable_converter.convert_to_iterable(set(), StringUniqueStringifier()))
+            list(self._test_json_dict_to_iterable_converter.convert_to_iterable(set(), StringUniqueStringifier())) # type: ignore
 
         self.assertEqual("Parameter 'input_list' was expected to be of type '{0}' but was '{1}'.".format(type(list()), type(set())), str(result.exception))
 
 
     def test_convert_to_iterable_input_list_element_not_string(self):
         with self.assertRaises(ValueError) as result:
-            list(self._test_json_dict_to_iterable_converter.convert_to_iterable([ "ABC", 1, "DEF"  ], StringUniqueStringifier()))
+            list(self._test_json_dict_to_iterable_converter.convert_to_iterable([ "ABC", 1, "DEF"  ], StringUniqueStringifier())) # type: ignore
 
         self.assertEqual("Element of list parameter 'input_list' was expected to be of type '{0}' but was '{1}'.".format(str, int), str(result.exception))
 
@@ -43,7 +43,7 @@ class JsonDictToIterableConverterTests(unittest.TestCase):
     def test_convert_to_iterable_of_tuples_input_dicts_parameter_not_List(self):
         with self.assertRaises(ValueError) as result:
             list(self._test_json_dict_to_iterable_converter.convert_to_iterable_of_tuples(
-                set(), 
+                set(), # type: ignore
                 "ApplicationComponent", 
                 "AccessLevel",
                 StringUniqueStringifier(), 
@@ -58,7 +58,7 @@ class JsonDictToIterableConverterTests(unittest.TestCase):
 
         with self.assertRaises(ValueError) as result:
             list(self._test_json_dict_to_iterable_converter.convert_to_iterable_of_tuples(
-                test_input_dict, 
+                test_input_dict, # type: ignore
                 "ApplicationComponent", 
                 "AccessLevel",
                 StringUniqueStringifier(), 

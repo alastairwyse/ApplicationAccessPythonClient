@@ -66,7 +66,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             True if the group exists.  False otherwise.
         """
 
-    def get_user_to_group_mappings(self, user: TUser, include_indirect_mappings: bool) -> Set[TGroup]:
+    def get_user_to_group_mappings(self, user: TUser, include_indirect_mappings: bool) -> Iterable[TGroup]:
         """Gets the groups that the specified user is mapped to (i.e. is a member of).
 
         Args:
@@ -79,7 +79,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of groups the specified user is a member of.
         """
 
-    def get_group_to_user_mappings(self, group: TGroup, includeIndirectMappings: bool) -> Set[TUser]:
+    def get_group_to_user_mappings(self, group: TGroup, includeIndirectMappings: bool) -> Iterable[TUser]:
         """Gets the users that are mapped to the specified group.
 
         Args:
@@ -92,7 +92,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of users that are mapped to the specified group.
         """
 
-    def get_group_to_group_mappings(self, group: TGroup, include_indirect_mappings: bool) -> Set[TGroup]:
+    def get_group_to_group_mappings(self, group: TGroup, include_indirect_mappings: bool) -> Iterable[TGroup]:
         """Gets the groups that the specified group is mapped to.
 
         Args:
@@ -105,7 +105,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of groups the specified group is mapped to.
         """    
 
-    def get_group_to_group_reverse_mappings(self, group: TGroup, include_indirect_mappings: bool) -> Set[TGroup]:
+    def get_group_to_group_reverse_mappings(self, group: TGroup, include_indirect_mappings: bool) -> Iterable[TGroup]:
         """Gets the groups that are mapped to the specified group.
         
         Args:
