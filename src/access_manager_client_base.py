@@ -1,9 +1,9 @@
-from typing import TypeVar, Generic, Dict, Callable, Union
+from typing import TypeVar, Generic, Dict, Callable, Union, Any
 from abc import ABC
 import json
 from http import HTTPStatus
 import requests
-from requests import Request
+from requests import Response
 
 from exceptions.deserialization_error import DeserializationError
 from exceptions.not_found_error import NotFoundError
@@ -19,17 +19,6 @@ TGroup = TypeVar("TGroup")
 TComponent = TypeVar("TComponent")
 TAccess = TypeVar("TAccess")
 
-# TODO:
-#   Add constructor params from requests.request, e.g...
-#     headers
-#     cookies?
-#     auth (what is this)
-#     timeout
-#     proxies
-#     verify
-#     cert
-#     proxy
-
 class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
     """Base for client classes which interface to AccessManager instances hosted as REST web APIs.
 
@@ -42,7 +31,6 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
             The type of components in the AccessManager.
         TAccess:
             The type of levels of access which can be assigned to an application component.
-    
     """
 
     def __init__(
@@ -52,8 +40,17 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
             group_stringifier: UniqueStringifierBase[TGroup], 
             application_component_stringifier: UniqueStringifierBase[TComponent], 
             access_level_stringifier: UniqueStringifierBase[TAccess], 
+            headers: Dict[str, str]=dict(), 
+            auth=None, 
+            timeout=0, 
+            proxies=None, 
+            verify=None, 
+            cert=None
         ) -> None:
         """Initialises a new instance of the AccessManagerClientBase class.
+
+        Optionsl parameters ('auth', 'timeout', 'proxies', etc...) when set, are passed directly to the underlying requests.request() methods.  
+        See the requests documentation (https://requests.readthedocs.io/) for documentation, type definitions, and usage examples of these parameters.
         
         Args:
             base_url:
@@ -66,6 +63,8 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
                 A string converter for application components.  Used to convert strings sent to and received from the web API from/to TComponent instances.
             access_level_stringifier:
                 A string converter for access levels.  Used to convert strings sent to and received from the web API from/to TAccess instances.
+            headers:
+                An optional Dict containing HTTP header neam/value pairs to send with each request to the AccessManager instance.
         """
         if (base_url[len(base_url) - 1] != "/"):
             raise ValueError("Parameter 'base_url' with value '{0}' must have a trailing forward slash character.".format(base_url))
@@ -76,12 +75,128 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
         self._group_stringifier = group_stringifier
         self._application_component_stringifier = application_component_stringifier
         self._access_level_stringifier = access_level_stringifier
-        self._request_accept_header: Dict[str, str] = { "Accept": "application/json" }
+        self._headers: Dict[str, str] = headers
+        self._headers["Accept"] = "application/json"
+        self._auth = auth
+        self._timeout = timeout
+        self._proxies = proxies
+        self._verify = verify
+        self._cert = cert
 
 
     #region Private/Protected Methods
 
-    # TODO: SendGetRequest()... need to setup generic method.
+    def _send_get_request(self, request_url: str) -> Dict[str, Any]:
+        """Sends an HTTP GET request, expecting a 200 status returned to indicate success, and attempting to deserialize the response body to a Dict containing JSON (e.g. created by json.loads()).
+
+        Args:
+            request_url: The URL of the request.
+
+        Returns:
+            The response body deserialized to a Dict containing JSON.
+        """
+        try:
+            response: Response = requests.request(
+                str(HTTPMethod.get), 
+                request_url, 
+                headers=self._headers, 
+                auth=self._auth, 
+                timeout=self._timeout, 
+                proxies=self._proxies, 
+                verify=self._verify, 
+                cert=self._cert
+            )
+        except Exception as exc:
+            raise Exception("Failed to call URL '{0}' with '{1}' method.".format(request_url, str(HTTPMethod.get))) from exc
+
+        if (response.status_code != 200):
+            self._handle_non_success_response_status(HTTPMethod.get, request_url, HTTPStatus(response.status_code), response.text)
+        try:
+            response_json: Dict[str, Any] = response.json()
+        except Exception as exc:
+            raise Exception("Failed to call URL '{0}' with '{1}' method.  Error deserializing response body from JSON to Dict.".format(request_url, str(HTTPMethod.get))) from exc
+        
+        return response_json
+
+
+    def _send_get_request_for_contains_method(self, request_url: str) -> bool:
+        """Sends an HTTP GET request, expecting either a 200 or 404 status returned, and converting the status to an equivalent boolean value.
+
+        Args:
+            request_url: The URL of the request.
+
+        Returns:
+            True in the case a 200 response status is received, or false in the case a 404 status is received.
+        """
+        return_value: bool = False
+        try:
+            response: Response = requests.request(
+                str(HTTPMethod.get), 
+                request_url, 
+                headers=self._headers, 
+                auth=self._auth, 
+                timeout=self._timeout, 
+                proxies=self._proxies, 
+                verify=self._verify, 
+                cert=self._cert
+            )
+        except Exception as exc:
+            raise Exception("Failed to call URL '{0}' with '{1}' method.".format(request_url, str(HTTPMethod.get))) from exc
+        if (not(response.apparent_encoding == 200 or response.apparent_encoding == 404)):
+            self._handle_non_success_response_status(HTTPMethod.get, request_url, HTTPStatus(response.status_code), response.text)
+        if (response.status_code == 200):
+            return_value = True
+
+        return return_value
+    
+
+    def _send_post_request(self, request_url: str) -> None:
+        """Sends an HTTP POST request, expecting a 201 status returned to indicate success.
+
+        Args:
+            request_url:
+                The URL of the request.
+        """
+        try:
+            response: Response = requests.request(
+                str(HTTPMethod.post), 
+                request_url, 
+                headers=self._headers, 
+                auth=self._auth, 
+                timeout=self._timeout, 
+                proxies=self._proxies, 
+                verify=self._verify, 
+                cert=self._cert
+            )
+        except Exception as exc:
+            raise Exception("Failed to call URL '{0}' with '{1}' method.".format(request_url, str(HTTPMethod.post))) from exc
+        if (response.apparent_encoding != 201):
+            self._handle_non_success_response_status(HTTPMethod.post, request_url, HTTPStatus(response.status_code), response.text)
+    
+
+    def _send_delete_request(self, request_url: str) -> None:
+        """Sends an HTTP DELETE request, expecting a 200 status returned to indicate success.
+
+        Args:
+            request_url:
+                The URL of the request.
+        """
+        try:
+            response: Response = requests.request(
+                str(HTTPMethod.delete), 
+                request_url, 
+                headers=self._headers, 
+                auth=self._auth, 
+                timeout=self._timeout, 
+                proxies=self._proxies, 
+                verify=self._verify, 
+                cert=self._cert
+            )
+        except Exception as exc:
+            raise Exception("Failed to call URL '{0}' with '{1}' method.".format(request_url, str(HTTPMethod.delete))) from exc
+        if (response.apparent_encoding != 200):
+            self._handle_non_success_response_status(HTTPMethod.delete, request_url, HTTPStatus(response.status_code), response.text)
+
 
     def _initialize_base_url(self, base_url: str) -> None:
         """Adds an appropriate path suffix to the specified 'base_url' constructor parameter.
@@ -149,7 +264,7 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
             The deserialized response body, or null if the reponse could not be deserialized (e.g. was empty, or did not contain JSON).
         """
         try:
-            body_as_json: Dict[str, object] = json.loads(response_body)
+            body_as_json: Dict[str, Any] = json.loads(response_body)
         except Exception as exc:
             return None
 

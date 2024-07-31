@@ -15,7 +15,7 @@ class HttpErrorResponseJsonSerializer:
     _VALUE_PROPERTY_NAME: str = "value"
     _INNER_ERROR_PROPERTY_NAME: str = "innererror"
 
-    def serialize(self, http_error_response: HttpErrorResponse) -> Dict[str, object]:
+    def serialize(self, http_error_response: HttpErrorResponse) -> Dict[str, Any]:
         """Serializes the specified HttpErrorResponse to a JSON document.
         
         Args:
@@ -25,7 +25,7 @@ class HttpErrorResponseJsonSerializer:
         Returns:
             A JSON document representing the HttpErrorResponse.
         """
-        return_json_dict: Dict[str, object] = dict()
+        return_json_dict: Dict[str, Any] = dict()
         return_json_dict[self._ERROR_PROPERTY_NAME] = self.serialize_error(http_error_response)
 
         return return_json_dict
@@ -50,7 +50,7 @@ class HttpErrorResponseJsonSerializer:
             raise DeserializationError("Failed to deserialize HttpErrorResponse.  The specified JSON Dict did not contain an '{0}' property.".format(self._ERROR_PROPERTY_NAME))
 
 
-    def serialize_error(self, http_error_response: HttpErrorResponse) -> Dict[str, object]:
+    def serialize_error(self, http_error_response: HttpErrorResponse) -> Dict[str, Any]:
         """Serializes the 'error' and 'inner_error' properties of the JSON document returned by the serialize() method.
         
         Args:
@@ -60,15 +60,15 @@ class HttpErrorResponseJsonSerializer:
         Returns:
             The 'error' or 'innererror' property of the JSON document.
         """
-        return_json_dict: Dict[str, object] = dict()
+        return_json_dict: Dict[str, Any] = dict()
 
         return_json_dict[self._CODE_PROPERTY_NAME] = http_error_response.code
         return_json_dict[self._MESSAGE_PROPERTY_NAME] = http_error_response.message
         if (http_error_response.target is not None):
             return_json_dict[self._TARGET_PROPERTY_NAME] = http_error_response.target
-        attributes_json: List[Dict[str, object]] = list()
+        attributes_json: List[Dict[str, Any]] = list()
         for current_attribute in http_error_response.attributes:
-            current_attribute_json: Dict[str, object] = dict()
+            current_attribute_json: Dict[str, Any] = dict()
             current_attribute_json[self._NAME_PROPERTY_NAME] = current_attribute[0]
             #print(type(current_attribute[0]))
             current_attribute_json[self._VALUE_PROPERTY_NAME] = current_attribute[1]

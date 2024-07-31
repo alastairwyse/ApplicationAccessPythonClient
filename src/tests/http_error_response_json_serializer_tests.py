@@ -30,7 +30,7 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         """
         expected_json = json.loads(expected_json_string)
 
-        result: Dict[str, object] = self._test_http_error_response_json_serializer.serialize(error_response)
+        result: Dict[str, Any] = self._test_http_error_response_json_serializer.serialize(error_response)
 
         self.assertEqual(expected_json, result)
 
@@ -52,7 +52,7 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         """
         expected_json = json.loads(expected_json_string)
 
-        result: Dict[str, object] = self._test_http_error_response_json_serializer.serialize(error_response)
+        result: Dict[str, Any] = self._test_http_error_response_json_serializer.serialize(error_response)
 
         self.assertEqual(expected_json, result)
 
@@ -81,7 +81,7 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         """
         expected_json = json.loads(expected_json_string)
 
-        result: Dict[str, object] = self._test_http_error_response_json_serializer.serialize(error_response)
+        result: Dict[str, Any] = self._test_http_error_response_json_serializer.serialize(error_response)
 
         self.assertEqual(expected_json, result)
 
@@ -110,7 +110,7 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         """
         expected_json = json.loads(expected_json_string)
 
-        result: Dict[str, object] = self._test_http_error_response_json_serializer.serialize(error_response)
+        result: Dict[str, Any] = self._test_http_error_response_json_serializer.serialize(error_response)
 
         self.assertEqual(expected_json, result)
 
@@ -150,7 +150,7 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         """
         expected_json = json.loads(expected_json_string)
 
-        result: Dict[str, object] = self._test_http_error_response_json_serializer.serialize(error_response)
+        result: Dict[str, Any] = self._test_http_error_response_json_serializer.serialize(error_response)
 
         self.assertEqual(expected_json, result)
 
@@ -210,7 +210,7 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
             ("toVertex", "parent")
         ]
         test_error_response = HttpErrorResponse(test_code, test_message, test_target, test_attributes)
-        test_json_object: Dict[str, object] = self._test_http_error_response_json_serializer.serialize(test_error_response)
+        test_json_object: Dict[str, Any] = self._test_http_error_response_json_serializer.serialize(test_error_response)
 
         result: HttpErrorResponse = self._test_http_error_response_json_serializer.deserialize(test_json_object)
 
@@ -224,7 +224,7 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
 
 
         test_error_response = HttpErrorResponse(test_code, test_message, test_target)
-        test_json_object: Dict[str, object] = self._test_http_error_response_json_serializer.serialize(test_error_response)
+        test_json_object: Dict[str, Any] = self._test_http_error_response_json_serializer.serialize(test_error_response)
 
         result = self._test_http_error_response_json_serializer.deserialize(test_json_object)
 
@@ -237,7 +237,7 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
 
 
         test_error_response = HttpErrorResponse(test_code, test_message, attributes=test_attributes)
-        test_json_object: Dict[str, object] = self._test_http_error_response_json_serializer.serialize(test_error_response)
+        test_json_object: Dict[str, Any] = self._test_http_error_response_json_serializer.serialize(test_error_response)
 
         result = self._test_http_error_response_json_serializer.deserialize(test_json_object)
 
@@ -251,7 +251,7 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
 
 
         test_error_response = HttpErrorResponse(test_code, test_message)
-        test_json_object: Dict[str, object] = self._test_http_error_response_json_serializer.serialize(test_error_response)
+        test_json_object: Dict[str, Any] = self._test_http_error_response_json_serializer.serialize(test_error_response)
 
         result = self._test_http_error_response_json_serializer.deserialize(test_json_object)
 
@@ -275,7 +275,7 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
         test_inner_error_message: str = "An edge already exists between vertices 'child' and 'parent'."
         test_inner_error = HttpErrorResponse(test_inner_error_code, test_inner_error_message)
         test_error_response = HttpErrorResponse(test_code, test_message, test_target, test_attributes, test_inner_error)
-        test_json_object: Dict[str, object] = self._test_http_error_response_json_serializer.serialize(test_error_response)
+        test_json_object: Dict[str, Any] = self._test_http_error_response_json_serializer.serialize(test_error_response)
 
         result: HttpErrorResponse = self._test_http_error_response_json_serializer.deserialize(test_json_object)
 
@@ -292,7 +292,7 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
 
 
         test_error_response = HttpErrorResponse(test_code, test_message, test_target, inner_error=test_inner_error)
-        test_json_object: Dict[str, object] = self._test_http_error_response_json_serializer.serialize(test_error_response)
+        test_json_object: Dict[str, Any] = self._test_http_error_response_json_serializer.serialize(test_error_response)
 
         result: HttpErrorResponse = self._test_http_error_response_json_serializer.deserialize(test_json_object)
 
@@ -308,7 +308,7 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
 
 
         test_error_response = HttpErrorResponse(test_code, test_message, attributes=test_attributes, inner_error=test_inner_error)
-        test_json_object: Dict[str, object] = self._test_http_error_response_json_serializer.serialize(test_error_response)
+        test_json_object: Dict[str, Any] = self._test_http_error_response_json_serializer.serialize(test_error_response)
 
         result: HttpErrorResponse = self._test_http_error_response_json_serializer.deserialize(test_json_object)
 
@@ -325,7 +325,7 @@ class HttpErrorResponseJsonSerializerUnitTests(unittest.TestCase):
 
 
         test_error_response = HttpErrorResponse(test_code, test_message, inner_error=test_inner_error)
-        test_json_object: Dict[str, object] = self._test_http_error_response_json_serializer.serialize(test_error_response)
+        test_json_object: Dict[str, Any] = self._test_http_error_response_json_serializer.serialize(test_error_response)
 
         result: HttpErrorResponse = self._test_http_error_response_json_serializer.deserialize(test_json_object)
 
