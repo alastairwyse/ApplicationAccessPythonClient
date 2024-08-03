@@ -44,6 +44,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
     def entity_types(self) -> Iterable[str]:
         """Returns a collection of all entity types in the access manager."""
 
+    @abstractmethod
     def contains_user(self, user: TUser) -> bool:
         """Returns true if the specified user exists.
 
@@ -55,6 +56,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             True if the user exists.  False otherwise.
         """
 
+    @abstractmethod
     def contains_group(self, group: TGroup) -> bool:
         """Returns true if the specified group exists.
 
@@ -66,6 +68,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             True if the group exists.  False otherwise.
         """
 
+    @abstractmethod
     def get_user_to_group_mappings(self, user: TUser, include_indirect_mappings: bool) -> Iterable[TGroup]:
         """Gets the groups that the specified user is mapped to (i.e. is a member of).
 
@@ -79,7 +82,8 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of groups the specified user is a member of.
         """
 
-    def get_group_to_user_mappings(self, group: TGroup, includeIndirectMappings: bool) -> Iterable[TUser]:
+    @abstractmethod
+    def get_group_to_user_mappings(self, group: TGroup, include_indirect_mappings: bool) -> Iterable[TUser]:
         """Gets the users that are mapped to the specified group.
 
         Args:
@@ -92,6 +96,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of users that are mapped to the specified group.
         """
 
+    @abstractmethod
     def get_group_to_group_mappings(self, group: TGroup, include_indirect_mappings: bool) -> Iterable[TGroup]:
         """Gets the groups that the specified group is mapped to.
 
@@ -105,6 +110,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of groups the specified group is mapped to.
         """    
 
+    @abstractmethod
     def get_group_to_group_reverse_mappings(self, group: TGroup, include_indirect_mappings: bool) -> Iterable[TGroup]:
         """Gets the groups that are mapped to the specified group.
         
@@ -118,6 +124,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of groups that are mapped to the specified group.
         """
 
+    @abstractmethod
     def get_user_to_application_component_and_access_level_mappings(self, user: TUser) -> Iterable[Tuple[TComponent, TAccess]]:
         """Gets the application component and access level pairs that the specified user is mapped to.
 
@@ -128,6 +135,8 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
         Returns:
             A collection of Tuples containing the application component and access level pairs that the specified user is mapped to.
         """
+
+    @abstractmethod
     def get_application_component_and_access_level_to_user_mappings(self, application_component: TComponent, accesss_level: TAccess, include_indirect_mappings: bool) -> Iterable[TUser]:
         """Gets the users that are mapped to the specified application component and access level pair.
 
@@ -143,6 +152,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of users that are mapped to the specified application component and access level.
         """
 
+    @abstractmethod
     def get_group_to_application_component_and_access_level_mappings(self, group: TGroup) -> Iterable[Tuple[TComponent, TAccess]]:
         """Gets the application component and access level pairs that the specified group is mapped to.
 
@@ -154,6 +164,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of Tuples containing the application component and access level pairs that the specified group is mapped to.
         """
 
+    @abstractmethod
     def get_application_component_and_access_level_to_group_mappings(self, application_component: TComponent, accesss_level: TAccess, include_indirect_mappings: bool) -> Iterable[TGroup]:
         """Gets the groups that are mapped to the specified application component and access level pair.
 
@@ -169,6 +180,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of groups that are mapped to the specified application component and access level.
         """
 
+    @abstractmethod
     def contains_entity_type(self, entity_type: str) -> bool:
         """Returns true if the specified entity type exists.
 
@@ -180,6 +192,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             True if the entity type exists.  False otherwise.
         """
 
+    @abstractmethod
     def get_entities(self, entity_type: str) -> Iterable[str]:
         """Returns all entities of the specified type.
 
@@ -191,6 +204,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of all entities of the specified type.
         """
 
+    @abstractmethod
     def contains_entity(self, entity_type: str, entity: str) -> bool:
         """Returns true if the specified entity exists.
 
@@ -204,6 +218,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             True if the entity exists.  False otherwise.
         """
 
+    @abstractmethod
     def get_user_to_entity_mappings_(self, user: TUser) -> Iterable[Tuple[str, str]]:
         """Gets the entities that the specified user is mapped to.
 
@@ -215,6 +230,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of Tuples containing the entity type and entity that the specified user is mapped to.
         """ 
 
+    @abstractmethod
     def get_user_to_entity_mappings_for_type(self, user: TUser, entity_type: str) -> Iterable[str]:
         """Gets the entities of a given type that the specified user is mapped to.
 
@@ -228,6 +244,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of entities that the specified user is mapped to.
         """ 
 
+    @abstractmethod
     def get_entity_to_user_mappings_(self, entity_type: str, entity: str, include_indirect_mappings: bool) -> Iterable[TUser]:
         """Gets the users that are mapped to the specified entity.
         
@@ -243,6 +260,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of users that are mapped to the specified entity.
         """
 
+    @abstractmethod
     def get_group_to_entity_mappings_(self, group: TGroup) -> Iterable[Tuple[str, str]]:
         """Gets the entities that the specified group is mapped to.
 
@@ -254,6 +272,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of Tuples containing the entity type and entity that the specified group is mapped to.
         """ 
 
+    @abstractmethod
     def get_group_to_entity_mappings_for_type(self, group: TGroup, entity_type: str) -> Iterable[str]:
         """Gets the entities of a given type that the specified group is mapped to.
 
@@ -267,6 +286,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of entities that the specified group is mapped to.
         """ 
 
+    @abstractmethod
     def get_entity_to_group_mappings_(self, entity_type: str, entity: str, include_indirect_mappings: bool) -> Iterable[TGroup]:
         """Gets the groups that are mapped to the specified entity.
         
@@ -282,6 +302,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of groups that are mapped to the specified entity.
         """
 
+    @abstractmethod
     def has_access_to_application_component(self, user: TUser, application_component: TComponent, access_level: TAccess) -> bool:
         """Checks whether the specified user (or a group that the user is a member of) has access to an application component at the specified level of access.
 
@@ -296,6 +317,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             True if the user has access the component.  False otherwise.
         """
 
+    @abstractmethod
     def has_access_to_entity(self, user: TUser, entity_type: str, entity: str) -> bool:
         """Checks whether the specified user (or a group that the user is a member of) has access to the specified entity.
 
@@ -310,6 +332,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             True if the user has access the entity.  False otherwise.
         """
 
+    @abstractmethod
     def get_application_components_accesible_by_user(self, user: TUser) -> Set[Tuple[TComponent, TAccess]]:
         """Gets all application components and levels of access that the specified user (or a group that the user is a member of) has access to.
 
@@ -321,6 +344,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             The application components and levels of access to those application components that the user has access to.
         """
 
+    @abstractmethod
     def get_application_components_accesible_by_group(self, group: TGroup) -> Set[Tuple[TComponent, TAccess]]:
         """Gets all application components and levels of access that the specified group (or a group that the specified group is a member of) has access to.
 
@@ -332,6 +356,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             The application components and levels of access to those application components that the group has access to.
         """
 
+    @abstractmethod
     def get_entities_accessible_by_user(self, user: TUser) -> Set[Tuple[str, str]]:
         """Gets all entities that the specified user (or a group that the user is a member of) has access to.
 
@@ -343,7 +368,8 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of Tuples containing the entity type and entity that the user has access to.
         """
 
-    def get_entities_accessible_by_user(self, user: TUser, entity_type: str) -> Set[str]:
+    @abstractmethod
+    def get_entities_of_type_accessible_by_user(self, user: TUser, entity_type: str) -> Set[str]:
         """Gets all entities of a given type that the specified user (or a group that the user is a member of) has access to.
 
         Args:
@@ -356,6 +382,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             The entities the user has access to.
         """
 
+    @abstractmethod
     def get_entities_accessible_by_group(self, group: TGroup) -> Set[Tuple[str, str]]:
         """Gets all entities that the specified group (or a group that the specified group is a member of) has access to.
 
@@ -367,7 +394,8 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
             A collection of Tuples containing the entity type and entity that the group has access to.
         """
 
-    def get_entities_accessible_by_group(self, group: TGroup, entity_type: str) -> Set[str]:
+    @abstractmethod
+    def get_entities_of_type_accessible_by_group(self, group: TGroup, entity_type: str) -> Set[str]:
         """Gets all entities of a given type that the specified group (or a group that the specified group is a member of) has access to.
 
         Args:

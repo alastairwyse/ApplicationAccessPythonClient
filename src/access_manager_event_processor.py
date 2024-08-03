@@ -62,16 +62,6 @@ class AccessManagerEventProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
                 The group in the mapping.
         """
 
-    def add_user_to_group_mapping(self, user: TUser, group: TGroup) -> None:
-        """Adds a mapping between the specified user and group.
-
-        Args:
-            user: 
-                The user in the mapping.
-            group: 
-                The group in the mapping.
-        """
-
     def remove_user_to_group_mapping(self, user: TUser, group: TGroup) -> None:
         """Removes the mapping between the specified user and group.
 

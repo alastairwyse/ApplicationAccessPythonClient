@@ -1,4 +1,4 @@
-from not_found_error import NotFoundError
+from exceptions.not_found_error import NotFoundError
 
 class ElementNotFoundError(NotFoundError):
     """The exception that is thrown when a element was not found in an AccessManager instance.
@@ -34,4 +34,4 @@ class ElementNotFoundError(NotFoundError):
         super().__init__(message, element_value)
         self._element_type: str = element_type
 
-    __doc__ += NotFoundError.__doc__
+    __doc__ += NotFoundError.__doc__ # type: ignore

@@ -21,6 +21,6 @@ class NotFoundError(ValueError):
                 A unique identifier for the resource.
         """
         super().__init__(message)
-        self._eleme_resource_idnt_value: str = resource_id
+        self._resource_id: str = resource_id
 
-    __doc__ += ValueError.__doc__
+    __doc__ += ValueError.__doc__ # type: ignore

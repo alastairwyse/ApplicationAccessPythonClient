@@ -10,7 +10,7 @@ class JsonDictToIterableConverter():
 
     def convert_to_iterable_of_tuples(
         self, 
-        input_dicts: List[Dict[str, str]], 
+        input_dicts: List[Dict[str, Any]], 
         key_1: str, 
         key_2: str, 
         stringifier_1: UniqueStringifierBase[T1], 

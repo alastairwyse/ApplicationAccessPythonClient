@@ -1,9 +1,10 @@
-from typing import TypeVar, Generic, Dict, Callable, Union, Any
+from typing import TypeVar, Generic, Dict, List, Callable, Union, Any
 from abc import ABC
 import json
 from http import HTTPStatus
 import requests
 from requests import Response
+import urllib.parse
 
 from exceptions.deserialization_error import DeserializationError
 from exceptions.not_found_error import NotFoundError
@@ -11,7 +12,6 @@ from exceptions.element_not_found_error import ElementNotFoundError
 from http_method import HTTPMethod
 from http_error_response_json_serializer import HttpErrorResponseJsonSerializer
 from models.http_error_response import HttpErrorResponse
-from string_unique_stringifier import StringUniqueStringifier
 from unique_stringifier_base import UniqueStringifierBase
 
 TUser = TypeVar("TUser")
@@ -42,7 +42,7 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
             access_level_stringifier: UniqueStringifierBase[TAccess], 
             headers: Dict[str, str]=dict(), 
             auth=None, 
-            timeout=0, 
+            timeout=65536, 
             proxies=None, 
             verify=None, 
             cert=None
@@ -82,22 +82,23 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
         self._proxies = proxies
         self._verify = verify
         self._cert = cert
+        self._initialize_status_code_to_exception_throwing_action_map()
 
 
     #region Private/Protected Methods
 
-    def _send_get_request(self, request_url: str) -> Dict[str, Any]:
+    def _send_get_request(self, request_url: str) -> Union[str, List[str], Dict[str, Any]]:
         """Sends an HTTP GET request, expecting a 200 status returned to indicate success, and attempting to deserialize the response body to a Dict containing JSON (e.g. created by json.loads()).
 
         Args:
             request_url: The URL of the request.
 
         Returns:
-            The response body deserialized to a Dict containing JSON.
+            The response body deserialized to a JSON-compatible type.
         """
         try:
             response: Response = requests.request(
-                str(HTTPMethod.get), 
+                str(HTTPMethod.GET.name), 
                 request_url, 
                 headers=self._headers, 
                 auth=self._auth, 
@@ -107,14 +108,14 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
                 cert=self._cert
             )
         except Exception as exc:
-            raise Exception("Failed to call URL '{0}' with '{1}' method.".format(request_url, str(HTTPMethod.get))) from exc
+            raise Exception("Failed to call URL '{0}' with '{1}' method.".format(request_url, str(HTTPMethod.GET.name))) from exc
 
         if (response.status_code != 200):
-            self._handle_non_success_response_status(HTTPMethod.get, request_url, HTTPStatus(response.status_code), response.text)
+            self._handle_non_success_response_status(HTTPMethod.GET, request_url, HTTPStatus(response.status_code), response.text)
         try:
-            response_json: Dict[str, Any] = response.json()
+            response_json: Union[str, List[str], Dict[str, Any]] = response.json()
         except Exception as exc:
-            raise Exception("Failed to call URL '{0}' with '{1}' method.  Error deserializing response body from JSON to Dict.".format(request_url, str(HTTPMethod.get))) from exc
+            raise Exception("Failed to call URL '{0}' with '{1}' method.  Error deserializing response body from JSON to Dict.".format(request_url, str(HTTPMethod.GET.name))) from exc
         
         return response_json
 
@@ -131,7 +132,7 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
         return_value: bool = False
         try:
             response: Response = requests.request(
-                str(HTTPMethod.get), 
+                str(HTTPMethod.GET.name), 
                 request_url, 
                 headers=self._headers, 
                 auth=self._auth, 
@@ -141,9 +142,9 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
                 cert=self._cert
             )
         except Exception as exc:
-            raise Exception("Failed to call URL '{0}' with '{1}' method.".format(request_url, str(HTTPMethod.get))) from exc
-        if (not(response.apparent_encoding == 200 or response.apparent_encoding == 404)):
-            self._handle_non_success_response_status(HTTPMethod.get, request_url, HTTPStatus(response.status_code), response.text)
+            raise Exception("Failed to call URL '{0}' with '{1}' method.".format(request_url, str(HTTPMethod.GET.name))) from exc
+        if (not(response.status_code == 200 or response.status_code == 404)):
+            self._handle_non_success_response_status(HTTPMethod.GET, request_url, HTTPStatus(response.status_code), response.text)
         if (response.status_code == 200):
             return_value = True
 
@@ -159,7 +160,7 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
         """
         try:
             response: Response = requests.request(
-                str(HTTPMethod.post), 
+                str(HTTPMethod.POST.name), 
                 request_url, 
                 headers=self._headers, 
                 auth=self._auth, 
@@ -169,9 +170,9 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
                 cert=self._cert
             )
         except Exception as exc:
-            raise Exception("Failed to call URL '{0}' with '{1}' method.".format(request_url, str(HTTPMethod.post))) from exc
-        if (response.apparent_encoding != 201):
-            self._handle_non_success_response_status(HTTPMethod.post, request_url, HTTPStatus(response.status_code), response.text)
+            raise Exception("Failed to call URL '{0}' with '{1}' method.".format(request_url, str(HTTPMethod.POST.name))) from exc
+        if (response.status_code != 201):
+            self._handle_non_success_response_status(HTTPMethod.POST, request_url, HTTPStatus(response.status_code), response.text)
     
 
     def _send_delete_request(self, request_url: str) -> None:
@@ -183,7 +184,7 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
         """
         try:
             response: Response = requests.request(
-                str(HTTPMethod.delete), 
+                str(HTTPMethod.DELETE.name), 
                 request_url, 
                 headers=self._headers, 
                 auth=self._auth, 
@@ -193,9 +194,9 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
                 cert=self._cert
             )
         except Exception as exc:
-            raise Exception("Failed to call URL '{0}' with '{1}' method.".format(request_url, str(HTTPMethod.delete))) from exc
-        if (response.apparent_encoding != 200):
-            self._handle_non_success_response_status(HTTPMethod.delete, request_url, HTTPStatus(response.status_code), response.text)
+            raise Exception("Failed to call URL '{0}' with '{1}' method.".format(request_url, str(HTTPMethod.DELETE.name))) from exc
+        if (response.status_code != 200):
+            self._handle_non_success_response_status(HTTPMethod.DELETE, request_url, HTTPStatus(response.status_code), response.text)
 
 
     def _initialize_base_url(self, base_url: str) -> None:
@@ -217,6 +218,18 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
         self._status_code_to_exception_throwing_action_map[HTTPStatus.NOT_FOUND] = self._not_found_exception_throwing_action
 
 
+    def _encode_url_component(self, component: str) -> str:
+        """Encodes the specified string for use in a URL.
+        
+        Args:
+            component:
+                The string to encode.
+
+        Returns:
+            The encoded string.
+        """
+        return urllib.parse.quote(component, safe="")
+
     def _handle_non_success_response_status(self, http_method: HTTPMethod, request_url: str, response_status: HTTPStatus, response_body: str):
         """Handles receipt of a non-success HTTP response status, by converting the status and response body to an appropriate Exception and throwing that Exception.
 
@@ -232,7 +245,7 @@ class AccessManagerClientBase(Generic[TUser, TGroup, TComponent, TAccess], ABC):
         """
         base_exception_message: str = "Failed to call URL '{0}' with '{1}' method.  Received non-succces HTTP response status '{2}'".format(
             request_url, 
-            http_method, 
+            http_method.name, 
             response_status
         )
 
