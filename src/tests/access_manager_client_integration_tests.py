@@ -11,6 +11,9 @@ from access_manager_client import AccessManagerClient
 class AccessManagerClientIntegrationTests(unittest.TestCase):
     """Integration tests for the AccessManagerClient class."""
 
+    _URL_RESERVED_CHARACTERS: str = "! * ' ( ) ; : @ & = + $ , / ? % # [ ]"
+
+    # Entity string constants
     _CLIENT_ACCOUNTS: str = "ClientAccount"
     _COMPANY_1: str = "Company1"
     _COMPANY_2: str = "Company2"
@@ -76,6 +79,36 @@ class AccessManagerClientIntegrationTests(unittest.TestCase):
 
         self.assertEqual("Failed to call URL 'http://127.0.0.1:100/api/v1/users/user1' with 'DELETE' method.", str(result.exception))
 
+
+    def test_send_get_request_value_error(self):
+        base_url: str = self._test_access_manager_client._base_url
+        request_url: str = base_url + "userToGroupMappings/user/user1?includeIndirectMappings="
+
+        with self.assertRaises(ValueError) as result:
+            self._test_access_manager_client._send_get_request(request_url)
+
+        self.assertEqual("One or more validation errors occurred.", str(result.exception))
+
+
+    def test_send_get_request_element_not_found_error(self):
+        base_url: str = self._test_access_manager_client._base_url
+        request_url: str = base_url + "userToGroupMappings/user/invalid?includeIndirectMappings=false"
+
+        with self.assertRaises(ElementNotFoundError) as result:
+            self._test_access_manager_client._send_get_request(request_url)
+
+        self.assertEqual("User 'invalid' does not exist. (Parameter 'user')", str(result.exception))
+
+
+    def tests_url_reserved_characters(self):
+
+        self._test_access_manager_client.add_user(self._URL_RESERVED_CHARACTERS)
+
+        contains_result: bool = self._test_access_manager_client.contains_user(self._URL_RESERVED_CHARACTERS)
+        self.assertTrue(contains_result)
+
+        self._test_access_manager_client.remove_user(self._URL_RESERVED_CHARACTERS)
+        
 
     def test_property_gets_on_empty_access_manager(self):
 
@@ -209,7 +242,7 @@ class AccessManagerClientIntegrationTests(unittest.TestCase):
 
 
     def test_remove_elements_and_mappings(self):
-        
+
         self._test_access_manager_client.remove_group_to_entity_mapping("group6", self._CLIENT_ACCOUNTS, self._COMPANY_1)
         self._test_access_manager_client.remove_group_to_entity_mapping("group6", self._PRODUCT_LINES, self._LINE_10)
         self._test_access_manager_client.remove_group_to_entity_mapping("group5", self._PRODUCT_LINES, self._LINE_9)
