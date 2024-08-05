@@ -418,7 +418,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         self._send_post_request(url)
 
 
-    def get_user_to_entity_mappings_(self, user: TUser) -> Iterable[Tuple[str, str]]:
+    def get_user_to_entity_mappings(self, user: TUser) -> Iterable[Tuple[str, str]]:
         url: str = self._base_url + "userToEntityMappings/user/{0}?includeIndirectMappings=false".format(
             self._encode_url_component(self._user_stringifier.to_string(user))
         )
@@ -444,7 +444,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         return results
 
 
-    def get_entity_to_user_mappings_(self, entity_type: str, entity: str, include_indirect_mappings: bool) -> Iterable[TUser]:
+    def get_entity_to_user_mappings(self, entity_type: str, entity: str, include_indirect_mappings: bool) -> Iterable[TUser]:
         url: str = self._base_url + "userToEntityMappings/entityType/{0}/entity/{1}?includeIndirectMappings={2}".format(
             self._encode_url_component(entity_type), 
             self._encode_url_component(entity), 
@@ -477,7 +477,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         self._send_post_request(url)
 
 
-    def get_group_to_entity_mappings_(self, group: TGroup) -> Iterable[Tuple[str, str]]:
+    def get_group_to_entity_mappings(self, group: TGroup) -> Iterable[Tuple[str, str]]:
         url: str = self._base_url + "groupToEntityMappings/group/{0}?includeIndirectMappings=false".format(
             self._encode_url_component(self._group_stringifier.to_string(group))
         )
@@ -503,7 +503,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         return results
 
 
-    def get_entity_to_group_mappings_(self, entity_type: str, entity: str, include_indirect_mappings: bool) -> Iterable[TGroup]:
+    def get_entity_to_group_mappings(self, entity_type: str, entity: str, include_indirect_mappings: bool) -> Iterable[TGroup]:
         url: str = self._base_url + "groupToEntityMappings/entityType/{0}/entity/{1}?includeIndirectMappings={2}".format(
             self._encode_url_component(entity_type), 
             self._encode_url_component(entity), 

@@ -219,7 +219,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
         """
 
     @abstractmethod
-    def get_user_to_entity_mappings_(self, user: TUser) -> Iterable[Tuple[str, str]]:
+    def get_user_to_entity_mappings(self, user: TUser) -> Iterable[Tuple[str, str]]:
         """Gets the entities that the specified user is mapped to.
 
         Args:
@@ -245,7 +245,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
         """ 
 
     @abstractmethod
-    def get_entity_to_user_mappings_(self, entity_type: str, entity: str, include_indirect_mappings: bool) -> Iterable[TUser]:
+    def get_entity_to_user_mappings(self, entity_type: str, entity: str, include_indirect_mappings: bool) -> Iterable[TUser]:
         """Gets the users that are mapped to the specified entity.
         
         Args:
@@ -261,7 +261,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
         """
 
     @abstractmethod
-    def get_group_to_entity_mappings_(self, group: TGroup) -> Iterable[Tuple[str, str]]:
+    def get_group_to_entity_mappings(self, group: TGroup) -> Iterable[Tuple[str, str]]:
         """Gets the entities that the specified group is mapped to.
 
         Args:
@@ -287,7 +287,7 @@ class AccessManagerQueryProcessor(Generic[TUser, TGroup, TComponent, TAccess], A
         """ 
 
     @abstractmethod
-    def get_entity_to_group_mappings_(self, entity_type: str, entity: str, include_indirect_mappings: bool) -> Iterable[TGroup]:
+    def get_entity_to_group_mappings(self, entity_type: str, entity: str, include_indirect_mappings: bool) -> Iterable[TGroup]:
         """Gets the groups that are mapped to the specified entity.
         
         Args:
