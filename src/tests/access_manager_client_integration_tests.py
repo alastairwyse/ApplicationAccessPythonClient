@@ -8,7 +8,7 @@ from unique_stringifier_base import UniqueStringifierBase
 from string_unique_stringifier import StringUniqueStringifier
 from access_manager_client import AccessManagerClient
 
-#@unittest.skip("Need to be run manually in a specific order")
+@unittest.skip("Need to be run manually in a specific order")
 class AccessManagerClientIntegrationTests(unittest.TestCase):
     """Integration tests for the AccessManagerClient class."""
 

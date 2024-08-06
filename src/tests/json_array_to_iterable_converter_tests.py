@@ -3,13 +3,13 @@ import unittest
 
 from string_unique_stringifier import StringUniqueStringifier
 from counting_string_unique_stringifier import CountingStringUniqueStringifier
-from src.json_dict_to_iterable_converter import JsonDictToIterableConverter
+from src.json_array_to_iterable_converter import JsonArrayToIterableConverter
 
 class JsonDictToIterableConverterTests(unittest.TestCase):
     """Unit tests for the JsonDictToIterableConverter class."""
 
     def setUp(self):
-        self._test_json_dict_to_iterable_converter = JsonDictToIterableConverter()
+        self._test_json_dict_to_iterable_converter = JsonArrayToIterableConverter()
 
 
     def test_convert_to_iterable_input_list_parameter_not_List(self):
@@ -19,11 +19,15 @@ class JsonDictToIterableConverterTests(unittest.TestCase):
         self.assertEqual("Parameter 'input_list' was expected to be of type '{0}' but was '{1}'.".format(type(list()), type(set())), str(result.exception))
 
 
-    def test_convert_to_iterable_input_list_element_not_string(self):
+    def test_convert_to_iterable_string_input_list_element_not_string(self):
         with self.assertRaises(ValueError) as result:
             list(self._test_json_dict_to_iterable_converter.convert_to_iterable([ "ABC", 1, "DEF"  ], StringUniqueStringifier())) # type: ignore
 
-        self.assertEqual("Element of list parameter 'input_list' was expected to be of type '{0}' but was '{1}'.".format(str, int), str(result.exception))
+        self.assertEqual("Parameter 'input_list' was expected to contain '{0}' elements, but '{1}' element was encountered.".format(str, int), str(result.exception))
+
+
+    def test_convert_to_iterable_dict_input_list_element_not_dict(self):
+        self.fail("Need to implement")
 
 
     def test_convert_to_iterable(self):

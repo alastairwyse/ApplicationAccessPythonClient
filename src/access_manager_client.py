@@ -1,6 +1,6 @@
 from typing import Dict, Set, List, TypeVar, Iterable, Generic, Tuple
 
-from json_dict_to_iterable_converter import JsonDictToIterableConverter
+from src.json_array_to_iterable_converter import JsonArrayToIterableConverter
 from unique_stringifier_base import UniqueStringifierBase
 from string_unique_stringifier import StringUniqueStringifier
 from access_manager_client_base import AccessManagerClientBase
@@ -86,7 +86,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
             verify=verify, 
             cert=cert
         )
-        self._json_to_iterable_converter: JsonDictToIterableConverter = JsonDictToIterableConverter()
+        self._json_to_iterable_converter: JsonArrayToIterableConverter = JsonArrayToIterableConverter()
 
 
     @property
