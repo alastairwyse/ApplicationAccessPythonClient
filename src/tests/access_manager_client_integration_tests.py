@@ -8,7 +8,7 @@ from unique_stringifier_base import UniqueStringifierBase
 from string_unique_stringifier import StringUniqueStringifier
 from access_manager_client import AccessManagerClient
 
-@unittest.skip("Need to be run manually in a specific order")
+#@unittest.skip("Need to be run manually in a specific order")
 class AccessManagerClientIntegrationTests(unittest.TestCase):
     """Integration tests for the AccessManagerClient class."""
 
@@ -407,7 +407,7 @@ class AccessManagerClientIntegrationTests(unittest.TestCase):
         users: List[str] = list(self._test_access_manager_client.get_entity_to_user_mappings(self._CLIENT_ACCOUNTS, self._COMPANY_1, False))
         self.assertEqual(1, len(users))
         self.assertTrue("user1" in users)
-        users = list(self._test_access_manager_client.get_entity_to_user_mappings(self._CLIENT_ACCOUNTS, self._COMPANY_1, False))
+        users = list(self._test_access_manager_client.get_entity_to_user_mappings(self._CLIENT_ACCOUNTS, self._COMPANY_1, True))
         self.assertEqual(8, len(users))
         self.assertTrue("user1" in users)
         self.assertTrue("user2" in users)
@@ -484,7 +484,7 @@ class AccessManagerClientIntegrationTests(unittest.TestCase):
         self.assertEqual(2, len(entities_set))
         self.assertTrue(self._LINE_7 in entities_set)
         self.assertTrue(self._LINE_9 in entities_set)
-        entitiesSet = self._test_access_manager_client.get_entities_of_type_accessible_by_user("orphanedUser", self._PRODUCT_LINES)
+        entities_set = self._test_access_manager_client.get_entities_of_type_accessible_by_user("orphanedUser", self._PRODUCT_LINES)
         self.assertEqual(0, len(entities_set))
 
         group_entity_mappings_set: Set[Tuple[str, str]] = self._test_access_manager_client.get_entities_accessible_by_group("group4")
@@ -501,7 +501,7 @@ class AccessManagerClientIntegrationTests(unittest.TestCase):
         self.assertTrue(self._LINE_8 in entities_set)
         self.assertTrue(self._LINE_9 in entities_set)
         self.assertTrue(self._LINE_10 in entities_set)
-        entitiesSet = self._test_access_manager_client.get_entities_of_type_accessible_by_group("orphanedGroup", self._PRODUCT_LINES)
+        entities_set = self._test_access_manager_client.get_entities_of_type_accessible_by_group("orphanedGroup", self._PRODUCT_LINES)
         self.assertEqual(0, len(entities_set))
 
 

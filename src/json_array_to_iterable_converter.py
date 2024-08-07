@@ -64,33 +64,35 @@ class JsonArrayToIterableConverter():
             An iterable of single values of type T1.
         """
         if (isinstance(input_list, List) == False):
-            raise ValueError("Parameter 'input_list' was expected to be of type '{0}' but was '{1}'.".format(type(list()), type(input_list)))
+            raise ValueError("Parameter 'input_list' was expected to be of type '{0}' but was '{1}'.".format(list, type(input_list)))
         
         encountered_first_value: bool = False
         array_elements_are_strings: bool = True
         for current_element in input_list:
             if (encountered_first_value == False):
                 if (not( (isinstance(current_element, str) == True) or (isinstance(current_element, dict) == True) )):
-                    raise ValueError("Element of list parameter 'input_list' was expected to be of type '{0}' or '{1}' but was '{2}'.".format(type(""), type(dict()), type(current_element)))
+                    raise ValueError("Element of list parameter 'input_list' was expected to be of type '{0}' or '{1}' but was '{2}'.".format(str, dict, type(current_element)))
                 if (isinstance(current_element, dict) == True):
                     array_elements_are_strings = False
                 if (array_elements_are_strings == False and key is None):
-                    raise ValueError("Parameter 'input_list' contains '{0}' elements, but parameter 'key' was not specified.".format(type(dict())))
+                    raise ValueError("Parameter 'input_list' contains '{0}' elements, but parameter 'key' was not specified.".format(dict))
                 if (array_elements_are_strings == True and key is not None):
-                    raise ValueError("Parameter 'input_list' contains '{0}' elements, but parameter 'key' was specified.".format(type("")))
+                    raise ValueError("Parameter 'input_list' contains '{0}' elements, but parameter 'key' was specified.".format(str))
                 encountered_first_value = True
 
             if (array_elements_are_strings == True):
                 if (isinstance(current_element, str) == False):
-                    raise ValueError("Parameter 'input_list' was expected to contain '{0}' elements, but '{1}' element was encountered.".format(type(""), type(current_element)))
+                    raise ValueError("Parameter 'input_list' was expected to contain '{0}' elements, but '{1}' element was encountered.".format(str, type(current_element)))
                 assert isinstance(current_element, str)
                 converted_value: T1 = stringifier.from_string(current_element)
 
             else:
                 if (isinstance(current_element, dict) == False):
-                    raise ValueError("Parameter 'input_list' was expected to contain '{0}' elements, but '{1}' element was encountered.".format(type(dict()), type(current_element)))
+                    raise ValueError("Parameter 'input_list' was expected to contain '{0}' elements, but '{1}' element was encountered.".format(dict, type(current_element)))
                 assert isinstance(current_element, dict)
                 assert isinstance(key, str)
+                self._raise_error_if_key_not_in_dict(current_element, key, "input_list")
+                self._raise_error_if_dict_value_not_of_type(current_element, key, str, "input_list")
                 converted_value: T1 = stringifier.from_string(current_element[key])
 
             yield converted_value
@@ -100,12 +102,12 @@ class JsonArrayToIterableConverter():
 
     def _raise_error_if_key_not_in_dict(self, input_dict: Dict[str, Any], key: str, parameter_name: str) -> None:
         if (key not in input_dict):
-            raise ValueError("Element of dict parameter '{0}' does not contain key '{1}'.".format(parameter_name, key))
+            raise ValueError("Element of parameter '{0}' does not contain key '{1}'.".format(parameter_name, key))
         
     
     def _raise_error_if_dict_value_not_of_type(self, input_dict: Dict[str, Any], key: str, expected_type: type, parameter_name: str) -> None:
         if (isinstance(input_dict[key], expected_type) == False):
-            raise ValueError("Value of key '{0}' of element of dict parameter '{1}' was expected to be of type '{2}' but was '{3}'.".format(
+            raise ValueError("Value of key '{0}' of element of parameter '{1}' was expected to be of type '{2}' but was '{3}'.".format(
                 key, 
                 parameter_name, 
                 expected_type, 

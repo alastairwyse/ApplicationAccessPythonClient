@@ -35,6 +35,10 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
     
     """
 
+    _USER_JSON_NAME: str = "user"
+    _GROUP_JSON_NAME: str = "group"
+    _FROM_GROUP_JSON_NAME: str = "fromGroup"
+    _TO_GROUP_JSON_NAME: str = "toGroup"
     _APPLICATION_COMPONENT_JSON_NAME: str = "applicationComponent"
     _ACCESS_LEVEL_JSON_NAME: str = "accessLevel"
     _ENTITY_TYPE_JSON_NAME: str = "entityType"
@@ -182,7 +186,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         assert isinstance(raw_results, List)
-        results: Iterable[TGroup] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._group_stringifier)
+        results: Iterable[TGroup] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._group_stringifier, self._GROUP_JSON_NAME)
         
         return results
     
@@ -194,7 +198,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         assert isinstance(raw_results, List)
-        results: Iterable[TUser] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._user_stringifier)
+        results: Iterable[TUser] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._user_stringifier, self._USER_JSON_NAME)
         
         return results
     
@@ -224,7 +228,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         assert isinstance(raw_results, List)
-        results: Iterable[TGroup] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._group_stringifier)
+        results: Iterable[TGroup] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._group_stringifier, self._TO_GROUP_JSON_NAME)
         
         return results
     
@@ -236,7 +240,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         assert isinstance(raw_results, List)
-        results: Iterable[TGroup] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._group_stringifier)
+        results: Iterable[TGroup] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._group_stringifier, self._FROM_GROUP_JSON_NAME)
         
         return results
     
@@ -284,7 +288,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         assert isinstance(raw_results, List)
-        results: Iterable[TUser] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._user_stringifier)
+        results: Iterable[TUser] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._user_stringifier, self._USER_JSON_NAME)
         
         return results
     
@@ -333,7 +337,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         assert isinstance(raw_results, List)
-        results: Iterable[TGroup] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._group_stringifier)
+        results: Iterable[TGroup] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._group_stringifier, self._GROUP_JSON_NAME)
         
         return results
     
@@ -385,7 +389,9 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         url: str = self._base_url + "entityTypes/{0}/entities".format(
             self._encode_url_component(entity_type)
         )
-        results = self._send_get_request(url)
+        raw_results = self._send_get_request(url)
+        assert isinstance(raw_results, List)
+        results: Iterable[str] = self._json_to_iterable_converter.convert_to_iterable(raw_results, StringUniqueStringifier(), self._ENTITY_JSON_NAME)
         
         return results
 
@@ -439,7 +445,9 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
             self._encode_url_component(self._user_stringifier.to_string(user)), 
             self._encode_url_component(entity_type)
         )
-        results = self._send_get_request(url)
+        raw_results = self._send_get_request(url)
+        assert isinstance(raw_results, List)
+        results: Iterable[str] = self._json_to_iterable_converter.convert_to_iterable(raw_results, StringUniqueStringifier(), self._ENTITY_JSON_NAME)
         
         return results
 
@@ -452,7 +460,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         assert isinstance(raw_results, List)
-        results: Iterable[TUser] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._user_stringifier)
+        results: Iterable[TUser] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._user_stringifier, self._USER_JSON_NAME)
         
         return results
 
@@ -494,11 +502,13 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
 
 
     def get_group_to_entity_mappings_for_type(self, group: TGroup, entity_type: str) -> Iterable[str]:
-        url: str = self._base_url + "userToEntityMappings/groupr/{0}/entityType/{1}?includeIndirectMappings=false".format(
+        url: str = self._base_url + "groupToEntityMappings/group/{0}/entityType/{1}?includeIndirectMappings=false".format(
             self._encode_url_component(self._group_stringifier.to_string(group)), 
             self._encode_url_component(entity_type)
         )
-        results = self._send_get_request(url)
+        raw_results = self._send_get_request(url)
+        assert isinstance(raw_results, List)
+        results: Iterable[str] = self._json_to_iterable_converter.convert_to_iterable(raw_results, StringUniqueStringifier(), self._ENTITY_JSON_NAME)
         
         return results
 
@@ -511,7 +521,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         assert isinstance(raw_results, List)
-        results: Iterable[TGroup] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._group_stringifier)
+        results: Iterable[TGroup] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._group_stringifier, self._GROUP_JSON_NAME)
         
         return results
 
@@ -603,7 +613,9 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
             self._encode_url_component(self._user_stringifier.to_string(user)), 
             self._encode_url_component(entity_type)
         )
-        results = self._send_get_request(url)
+        raw_results = self._send_get_request(url)
+        assert isinstance(raw_results, List)
+        results: Iterable[str] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._group_stringifier, self._ENTITY_JSON_NAME)
         
         return set(results)
 
@@ -625,11 +637,13 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
 
 
     def get_entities_of_type_accessible_by_group(self, group: TGroup, entity_type: str) -> Set[str]:
-        url: str = self._base_url + "userToEntityMappings/group/{0}/entityType/{1}?includeIndirectMappings=true".format(
+        url: str = self._base_url + "groupToEntityMappings/group/{0}/entityType/{1}?includeIndirectMappings=true".format(
             self._encode_url_component(self._group_stringifier.to_string(group)), 
             self._encode_url_component(entity_type)
         )
-        results = self._send_get_request(url)
+        raw_results = self._send_get_request(url)
+        assert isinstance(raw_results, List)
+        results: Iterable[str] = self._json_to_iterable_converter.convert_to_iterable(raw_results, self._group_stringifier, self._ENTITY_JSON_NAME)
         
         return set(results)
 
