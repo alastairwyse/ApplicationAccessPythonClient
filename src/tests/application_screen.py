@@ -8,4 +8,5 @@ class ApplicationScreen(Enum):
     manage_products = 2,
     settings = 3, 
     delivery = 4, 
-    review = 5
+    review = 5, 
+    reserved_characters = 4

@@ -124,7 +124,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
 
     def add_user(self, user: TUser) -> None:
         url: str = self._base_url + "users/{0}".format(
-            self._user_stringifier.to_string(user)
+            self._encode_url_component(self._user_stringifier.to_string(user))
             )
 
         self._send_post_request(url)
@@ -270,7 +270,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         results: Iterable[Tuple[TComponent, TAccess]] = self._json_to_iterable_converter.convert_to_iterable_of_tuples(
-            raw_results, # type: ignore
+            raw_results, # type: ignore[assignment]
             self._APPLICATION_COMPONENT_JSON_NAME, 
             self._ACCESS_LEVEL_JSON_NAME, 
             self._application_component_stringifier, 
@@ -319,7 +319,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         results: Iterable[Tuple[TComponent, TAccess]] = self._json_to_iterable_converter.convert_to_iterable_of_tuples(
-            raw_results, # type: ignore
+            raw_results, # type: ignore[assignment]
             self._APPLICATION_COMPONENT_JSON_NAME, 
             self._ACCESS_LEVEL_JSON_NAME, 
             self._application_component_stringifier, 
@@ -430,7 +430,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         results: Iterable[Tuple[str, str]] = self._json_to_iterable_converter.convert_to_iterable_of_tuples(
-            raw_results, # type: ignore
+            raw_results, # type: ignore[assignment]
             self._ENTITY_TYPE_JSON_NAME, 
             self._ENTITY_JSON_NAME, 
             StringUniqueStringifier(), 
@@ -491,7 +491,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         results: Iterable[Tuple[str, str]] = self._json_to_iterable_converter.convert_to_iterable_of_tuples(
-            raw_results, # type: ignore
+            raw_results, # type: ignore[assignment]
             self._ENTITY_TYPE_JSON_NAME, 
             self._ENTITY_JSON_NAME, 
             StringUniqueStringifier(), 
@@ -566,7 +566,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         results: Iterable[Tuple[TComponent, TAccess]] = self._json_to_iterable_converter.convert_to_iterable_of_tuples(
-            raw_results, # type: ignore
+            raw_results, # type: ignore[assignment]
             self._APPLICATION_COMPONENT_JSON_NAME, 
             self._ACCESS_LEVEL_JSON_NAME, 
             self._application_component_stringifier, 
@@ -582,7 +582,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         results: Iterable[Tuple[TComponent, TAccess]] = self._json_to_iterable_converter.convert_to_iterable_of_tuples(
-            raw_results, # type: ignore
+            raw_results, # type: ignore[assignment]
             self._APPLICATION_COMPONENT_JSON_NAME, 
             self._ACCESS_LEVEL_JSON_NAME, 
             self._application_component_stringifier, 
@@ -598,7 +598,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         results: Iterable[Tuple[str, str]] = self._json_to_iterable_converter.convert_to_iterable_of_tuples(
-            raw_results, # type: ignore
+            raw_results, # type: ignore[assignment]
             self._ENTITY_TYPE_JSON_NAME, 
             self._ENTITY_JSON_NAME, 
             StringUniqueStringifier(), 
@@ -626,7 +626,7 @@ class AccessManagerClient(AccessManagerClientBase, AccessManagerEventProcessor, 
         )
         raw_results = self._send_get_request(url)
         results: Iterable[Tuple[str, str]] = self._json_to_iterable_converter.convert_to_iterable_of_tuples(
-            raw_results, # type: ignore
+            raw_results, # type: ignore[assignment]
             self._ENTITY_TYPE_JSON_NAME, 
             self._ENTITY_JSON_NAME, 
             StringUniqueStringifier(), 

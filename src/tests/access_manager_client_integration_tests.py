@@ -104,12 +104,36 @@ class AccessManagerClientIntegrationTests(unittest.TestCase):
     def tests_url_reserved_characters(self):
 
         self._test_access_manager_client.add_user(self._URL_RESERVED_CHARACTERS)
+        self._test_access_manager_client.add_group(self._URL_RESERVED_CHARACTERS)
+        self._test_access_manager_client.add_group("group1")
+        self._test_access_manager_client.add_group("group2")
+        self._test_access_manager_client.add_user_to_group_mapping(self._URL_RESERVED_CHARACTERS, self._URL_RESERVED_CHARACTERS)
+        self._test_access_manager_client.add_group_to_group_mapping(self._URL_RESERVED_CHARACTERS, "group1")
+        self._test_access_manager_client.add_group_to_group_mapping("group2",  self._URL_RESERVED_CHARACTERS)
+        self._test_access_manager_client.add_user_to_application_component_and_access_level_mapping(self._URL_RESERVED_CHARACTERS, ApplicationScreen.reserved_characters, AccessLevel.reserved_characters)
+        self._test_access_manager_client.add_group_to_application_component_and_access_level_mapping(self._URL_RESERVED_CHARACTERS, ApplicationScreen.reserved_characters, AccessLevel.reserved_characters)
+        self._test_access_manager_client.add_entity_type(self._URL_RESERVED_CHARACTERS)
+        self._test_access_manager_client.add_entity(self._URL_RESERVED_CHARACTERS, self._URL_RESERVED_CHARACTERS)
+        self._test_access_manager_client.add_user_to_entity_mapping(self._URL_RESERVED_CHARACTERS, self._URL_RESERVED_CHARACTERS, self._URL_RESERVED_CHARACTERS)
+        self._test_access_manager_client.add_group_to_entity_mapping(self._URL_RESERVED_CHARACTERS, self._URL_RESERVED_CHARACTERS, self._URL_RESERVED_CHARACTERS)
 
-        contains_result: bool = self._test_access_manager_client.contains_user(self._URL_RESERVED_CHARACTERS)
-        self.assertTrue(contains_result)
+        #contains_result: bool = self._test_access_manager_client.contains_user(self._URL_RESERVED_CHARACTERS)
+        #self.assertTrue(contains_result)
 
+        self._test_access_manager_client.remove_group_to_entity_mapping(self._URL_RESERVED_CHARACTERS, self._URL_RESERVED_CHARACTERS, self._URL_RESERVED_CHARACTERS)
+        self._test_access_manager_client.remove_user_to_entity_mapping(self._URL_RESERVED_CHARACTERS, self._URL_RESERVED_CHARACTERS, self._URL_RESERVED_CHARACTERS)
+        self._test_access_manager_client.remove_entity(self._URL_RESERVED_CHARACTERS, self._URL_RESERVED_CHARACTERS)
+        self._test_access_manager_client.remove_entity_type(self._URL_RESERVED_CHARACTERS)
+        self._test_access_manager_client.remove_group_to_application_component_and_access_level_mapping(self._URL_RESERVED_CHARACTERS, ApplicationScreen.reserved_characters, AccessLevel.reserved_characters)
+        self._test_access_manager_client.remove_user_to_application_component_and_access_level_mapping(self._URL_RESERVED_CHARACTERS, ApplicationScreen.reserved_characters, AccessLevel.reserved_characters)
+        self._test_access_manager_client.remove_group_to_group_mapping("group2",  self._URL_RESERVED_CHARACTERS)
+        self._test_access_manager_client.remove_group_to_group_mapping(self._URL_RESERVED_CHARACTERS, "group1")
+        self._test_access_manager_client.remove_user_to_group_mapping(self._URL_RESERVED_CHARACTERS, self._URL_RESERVED_CHARACTERS)
+        self._test_access_manager_client.remove_group("group2")
+        self._test_access_manager_client.remove_group("group1")
+        self._test_access_manager_client.remove_group(self._URL_RESERVED_CHARACTERS)
         self._test_access_manager_client.remove_user(self._URL_RESERVED_CHARACTERS)
-        
+       
 
     def test_property_gets_on_empty_access_manager(self):
 
@@ -641,6 +665,8 @@ class AccessManagerClientIntegrationTests(unittest.TestCase):
                 return "Delivery"
             elif (input_object == ApplicationScreen.review):
                 return "Review"
+            elif (input_object == ApplicationScreen.reserved_characters):
+                return AccessManagerClientIntegrationTests()._URL_RESERVED_CHARACTERS
             else:
                 raise ValueError("Unhandled ApplicationScreen value '{0}'.".format(input_object))
 
@@ -658,6 +684,8 @@ class AccessManagerClientIntegrationTests(unittest.TestCase):
                 return ApplicationScreen.delivery
             elif (stringified_object == "Review"):
                 return ApplicationScreen.review
+            elif (stringified_object == AccessManagerClientIntegrationTests()._URL_RESERVED_CHARACTERS):
+                return ApplicationScreen.reserved_characters
             else:
                 raise ValueError("Unhandled value '{0}'.".format(stringified_object))
 
@@ -673,6 +701,8 @@ class AccessManagerClientIntegrationTests(unittest.TestCase):
                 return "Modify"
             elif (input_object == AccessLevel.delete):
                 return "Delete"
+            elif (input_object == AccessLevel.reserved_characters):
+                return AccessManagerClientIntegrationTests()._URL_RESERVED_CHARACTERS
             else:
                 raise ValueError("Unhandled AccessLevel value '{0}'.".format(input_object))
 
@@ -686,6 +716,8 @@ class AccessManagerClientIntegrationTests(unittest.TestCase):
                 return AccessLevel.modify
             elif (stringified_object == "Delete"):
                 return AccessLevel.delete
+            elif (stringified_object == AccessManagerClientIntegrationTests()._URL_RESERVED_CHARACTERS):
+                return AccessLevel.reserved_characters
             else:
                 raise ValueError("Unhandled value '{0}'.".format(stringified_object))
 

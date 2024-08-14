@@ -14,14 +14,14 @@ class JsonDictToIterableConverterTests(unittest.TestCase):
 
     def test_convert_to_iterable_input_list_parameter_not_List(self):
         with self.assertRaises(ValueError) as result:
-            list(self._test_json_dict_to_iterable_converter.convert_to_iterable(set(), StringUniqueStringifier())) # type: ignore
+            list(self._test_json_dict_to_iterable_converter.convert_to_iterable(set(), StringUniqueStringifier())) # type: ignore[assignment]
 
         self.assertEqual("Parameter 'input_list' was expected to be of type '{0}' but was '{1}'.".format(list, set), str(result.exception))
 
 
     def test_convert_to_iterable_first_input_list_element_not_string_nor_dict(self):
         with self.assertRaises(ValueError) as result:
-            list(self._test_json_dict_to_iterable_converter.convert_to_iterable([ 1, 2, 3  ], StringUniqueStringifier())) # type: ignore
+            list(self._test_json_dict_to_iterable_converter.convert_to_iterable([ 1, 2, 3  ], StringUniqueStringifier())) # type: ignore[assignment]
 
         self.assertEqual("Element of list parameter 'input_list' was expected to be of type '{0}' or '{1}' but was '{2}'.".format(str, dict, int), str(result.exception))
 
@@ -33,21 +33,21 @@ class JsonDictToIterableConverterTests(unittest.TestCase):
             { "ApplicationComponent": "SetupScreen", "AccessLevel": "Create" }
         ]
         with self.assertRaises(ValueError) as result:
-            list(self._test_json_dict_to_iterable_converter.convert_to_iterable(test_input_list, StringUniqueStringifier())) # type: ignore
+            list(self._test_json_dict_to_iterable_converter.convert_to_iterable(test_input_list, StringUniqueStringifier())) 
 
         self.assertEqual("Parameter 'input_list' contains '{0}' elements, but parameter 'key' was not specified.".format(dict), str(result.exception))
 
 
     def test_convert_to_iterable_str_input_list_key_parameter_not_none(self):
         with self.assertRaises(ValueError) as result:
-            list(self._test_json_dict_to_iterable_converter.convert_to_iterable([ "User1", "User2", "User3" ], StringUniqueStringifier(), "propertyName")) # type: ignore
+            list(self._test_json_dict_to_iterable_converter.convert_to_iterable([ "User1", "User2", "User3" ], StringUniqueStringifier(), "propertyName")) 
 
         self.assertEqual("Parameter 'input_list' contains '{0}' elements, but parameter 'key' was specified.".format(str), str(result.exception))
 
 
     def test_convert_to_iterable_string_input_list_element_not_string(self):
         with self.assertRaises(ValueError) as result:
-            list(self._test_json_dict_to_iterable_converter.convert_to_iterable([ "ABC", 1, "DEF"  ], StringUniqueStringifier())) # type: ignore
+            list(self._test_json_dict_to_iterable_converter.convert_to_iterable([ "ABC", 1, "DEF"  ], StringUniqueStringifier())) 
 
         self.assertEqual("Parameter 'input_list' was expected to contain '{0}' elements, but '{1}' element was encountered.".format(str, int), str(result.exception))
 
@@ -60,7 +60,7 @@ class JsonDictToIterableConverterTests(unittest.TestCase):
         ]
 
         with self.assertRaises(ValueError) as result:
-            list(self._test_json_dict_to_iterable_converter.convert_to_iterable(test_input_list, StringUniqueStringifier(), "ApplicationComponent")) # type: ignore
+            list(self._test_json_dict_to_iterable_converter.convert_to_iterable(test_input_list, StringUniqueStringifier(), "ApplicationComponent")) 
 
         self.assertEqual("Parameter 'input_list' was expected to contain '{0}' elements, but '{1}' element was encountered.".format(dict, int), str(result.exception))
 
@@ -73,7 +73,7 @@ class JsonDictToIterableConverterTests(unittest.TestCase):
         ]
 
         with self.assertRaises(ValueError) as result:
-            list(self._test_json_dict_to_iterable_converter.convert_to_iterable(test_input_list, StringUniqueStringifier(), "AccessLevel")) # type: ignore
+            list(self._test_json_dict_to_iterable_converter.convert_to_iterable(test_input_list, StringUniqueStringifier(), "AccessLevel")) 
 
         self.assertEqual("Element of parameter 'input_list' does not contain key 'AccessLevel'.", str(result.exception))
 
@@ -86,7 +86,7 @@ class JsonDictToIterableConverterTests(unittest.TestCase):
         ]
 
         with self.assertRaises(ValueError) as result:
-            list(self._test_json_dict_to_iterable_converter.convert_to_iterable(test_input_list, StringUniqueStringifier(), "ApplicationComponent")) # type: ignore
+            list(self._test_json_dict_to_iterable_converter.convert_to_iterable(test_input_list, StringUniqueStringifier(), "ApplicationComponent")) 
 
         self.assertEqual("Value of key 'ApplicationComponent' of element of parameter 'input_list' was expected to be of type '{0}' but was '{1}'.".format(str, int), str(result.exception))
 
@@ -126,7 +126,7 @@ class JsonDictToIterableConverterTests(unittest.TestCase):
     def test_convert_to_iterable_of_tuples_input_dicts_parameter_not_List(self):
         with self.assertRaises(ValueError) as result:
             list(self._test_json_dict_to_iterable_converter.convert_to_iterable_of_tuples(
-                set(), # type: ignore
+                set(), # type: ignore[assignment]
                 "ApplicationComponent", 
                 "AccessLevel",
                 StringUniqueStringifier(), 
@@ -141,7 +141,7 @@ class JsonDictToIterableConverterTests(unittest.TestCase):
 
         with self.assertRaises(ValueError) as result:
             list(self._test_json_dict_to_iterable_converter.convert_to_iterable_of_tuples(
-                test_input_dicts, # type: ignore
+                test_input_dicts, # type: ignore[assignment]
                 "ApplicationComponent", 
                 "AccessLevel",
                 StringUniqueStringifier(), 

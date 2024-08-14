@@ -6,4 +6,5 @@ class AccessLevel(Enum):
     view = 0, 
     create = 1, 
     modify = 2, 
-    delete = 3
+    delete = 3, 
+    reserved_characters = 4
