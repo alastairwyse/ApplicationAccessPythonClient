@@ -50,7 +50,7 @@ class AccessManagerClientIntegrationTests(unittest.TestCase):
         )
 
     
-    def test_connetion_exceptions(self):
+    def test_connection_exceptions(self):
 
         self._test_access_manager_client = AccessManagerClient[str, str, ApplicationScreen, AccessLevel](
             "http://127.0.0.1:100/", 

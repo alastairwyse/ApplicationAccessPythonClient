@@ -47,7 +47,7 @@ class JsonDictToIterableConverterTests(unittest.TestCase):
 
     def test_convert_to_iterable_string_input_list_element_not_string(self):
         with self.assertRaises(ValueError) as result:
-            list(self._test_json_dict_to_iterable_converter.convert_to_iterable([ "ABC", 1, "DEF"  ], StringUniqueStringifier())) 
+            list(self._test_json_dict_to_iterable_converter.convert_to_iterable([ "ABC", 1, "DEF"  ], StringUniqueStringifier())) # type: ignore[assignment]
 
         self.assertEqual("Parameter 'input_list' was expected to contain '{0}' elements, but '{1}' element was encountered.".format(str, int), str(result.exception))
 
