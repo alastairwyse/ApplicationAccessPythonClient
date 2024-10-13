@@ -1,4 +1,4 @@
-from unique_stringifier_base import UniqueStringifierBase
+from src.unique_stringifier_base import UniqueStringifierBase
 
 class StringUniqueStringifier(UniqueStringifierBase[str]):
     """An implementation of UniqueStringifierBase[T] for strings."""

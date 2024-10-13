@@ -1,4 +1,4 @@
-from exceptions.not_found_error import NotFoundError
+from src.exceptions.not_found_error import NotFoundError
 
 class ElementNotFoundError(NotFoundError):
     """The exception that is thrown when a element was not found in an AccessManager instance.

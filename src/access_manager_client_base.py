@@ -6,13 +6,13 @@ import requests
 from requests import Response
 import urllib.parse
 
-from exceptions.deserialization_error import DeserializationError
-from exceptions.not_found_error import NotFoundError
-from exceptions.element_not_found_error import ElementNotFoundError
-from http_method import HTTPMethod
-from http_error_response_json_serializer import HttpErrorResponseJsonSerializer
-from models.http_error_response import HttpErrorResponse
-from unique_stringifier_base import UniqueStringifierBase
+from src.exceptions.deserialization_error import DeserializationError
+from src.exceptions.not_found_error import NotFoundError
+from src.exceptions.element_not_found_error import ElementNotFoundError
+from src.http_method import HTTPMethod
+from src.http_error_response_json_serializer import HttpErrorResponseJsonSerializer
+from src.models.http_error_response import HttpErrorResponse
+from src.unique_stringifier_base import UniqueStringifierBase
 
 TUser = TypeVar("TUser")
 TGroup = TypeVar("TGroup")

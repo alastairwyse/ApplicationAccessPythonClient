@@ -1,7 +1,7 @@
 from typing import Dict, List, Tuple, Any, Union
 
-from models.http_error_response import HttpErrorResponse
-from exceptions.deserialization_error import DeserializationError
+from src.models.http_error_response import HttpErrorResponse
+from src.exceptions.deserialization_error import DeserializationError
 
 class HttpErrorResponseJsonSerializer:
     """Serializes and deserializes HttpErrorResponse instances to and from JSON documents."""

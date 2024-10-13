@@ -1,8 +1,8 @@
 from typing import List, Tuple, Set
 import unittest
 
-from string_unique_stringifier import StringUniqueStringifier
-from counting_string_unique_stringifier import CountingStringUniqueStringifier
+from src.string_unique_stringifier import StringUniqueStringifier
+from src.tests.counting_string_unique_stringifier import CountingStringUniqueStringifier
 from src.json_array_to_iterable_converter import JsonArrayToIterableConverter
 
 class JsonDictToIterableConverterTests(unittest.TestCase):

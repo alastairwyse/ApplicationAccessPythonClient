@@ -1,4 +1,4 @@
-from string_unique_stringifier import StringUniqueStringifier
+from src.string_unique_stringifier import StringUniqueStringifier
 
 class CountingStringUniqueStringifier(StringUniqueStringifier):
     """Subclass of StringUniqueStringifier used for testing which counts the number of calls to the to_string() and from_string() methods."""

@@ -1,14 +1,14 @@
 from typing import List, Tuple, Set
 import unittest
 
-from application_screen import ApplicationScreen
-from access_level import AccessLevel
-from exceptions.element_not_found_error import ElementNotFoundError
-from unique_stringifier_base import UniqueStringifierBase
-from string_unique_stringifier import StringUniqueStringifier
-from access_manager_client import AccessManagerClient
+from src.tests.application_screen import ApplicationScreen
+from src.tests.access_level import AccessLevel
+from src.exceptions.element_not_found_error import ElementNotFoundError
+from src.unique_stringifier_base import UniqueStringifierBase
+from src.string_unique_stringifier import StringUniqueStringifier
+from src.access_manager_client import AccessManagerClient
 
-#@unittest.skip("Need to be run manually in a specific order")
+@unittest.skip("Need to be run manually in a specific order")
 class AccessManagerClientIntegrationTests(unittest.TestCase):
     """Integration tests for the AccessManagerClient class."""
 

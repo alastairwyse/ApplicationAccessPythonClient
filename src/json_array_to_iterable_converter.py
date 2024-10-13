@@ -1,5 +1,6 @@
 from typing import List, Dict, TypeVar, Tuple, Iterable, Any, Union
-from unique_stringifier_base import UniqueStringifierBase
+
+from src.unique_stringifier_base import UniqueStringifierBase
 
 T1 = TypeVar("T1")
 T2 = TypeVar("T2")

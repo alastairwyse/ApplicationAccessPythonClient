@@ -2,9 +2,9 @@ from typing import Dict, List, Tuple, Iterable, TypeVar, Any
 import json
 import unittest
 
-from models.http_error_response import HttpErrorResponse
-from exceptions.deserialization_error import DeserializationError
-from http_error_response_json_serializer import HttpErrorResponseJsonSerializer
+from src.models.http_error_response import HttpErrorResponse
+from src.exceptions.deserialization_error import DeserializationError
+from src.http_error_response_json_serializer import HttpErrorResponseJsonSerializer
 
 T = TypeVar("T")
 
